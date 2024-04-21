@@ -1,0 +1,1 @@
+AIRTABLE_API_TOKEN=op://vault/item-name/field-name
