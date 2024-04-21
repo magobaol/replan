@@ -1,13 +1,13 @@
 const airtableAPI = require('./airtableAPI');
 const {read} = require("@1password/op-js");
 
-async function planSessions(show) {
+async function planSessions(show, includePast) {
     airtableAPI.configure(read.parse(process.env.AIRTABLE_API_TOKEN_OP_PATH), show['base-id'])
     console.log(`Creating plan for the show ${show.name}`)
     await airtableAPI.emptyTable("Plan")
     try {
         const actors = await airtableAPI.loadActors();
-        const sessions = await airtableAPI.loadSessions();
+        const sessions = await airtableAPI.loadSessions(includePast);
         const scenes = await airtableAPI.loadScenes();
         const characters = await airtableAPI.loadCharacters();
 

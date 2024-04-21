@@ -31,8 +31,9 @@ program
 program
     .command('plan')
     .addArgument(new Argument('show', 'Show').choices(getShowsIds()))
-    .action((show) => {
-        planSessions(getShowById(show)).catch(err => console.error('Failed to run planning sessions:', err))
+    .option('-ip, --include-past', 'Create plans for past sessions too')
+    .action((show, options) => {
+        planSessions(getShowById(show), options.includePast).catch(err => console.error('Failed to run planning sessions:', err))
     })
 
 // Parse the command-line arguments only if the script is being run directly

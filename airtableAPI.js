@@ -1,4 +1,5 @@
 const Airtable = require('airtable');
+const { formatISO } = require('date-fns');
 
 // Module-scoped variables to hold the Airtable base instance
 let base;
@@ -35,14 +36,18 @@ function loadActors() {
     });
 };
 
-async function loadSessions() {
+async function loadSessions(includePast) {
+    const today = new Date();
+    const formattedToday = formatISO(today, { representation: 'date' }); // format as 'YYYY-MM-DD'
+
     return new Promise((resolve, reject) => {
         let sessions = [];
         base('Session').select({
+            filterByFormula: !includePast ? `IS_AFTER({Date}, '${formattedToday}')` : '',
             sort: [{field: 'Date', direction: 'asc'}],
         }).eachPage(function page(records, fetchNextPage) {
             records.forEach(function(record) {
-                // console.log('Retrieved ', record.get('Date'));
+                console.log('Retrieved ', record.get('Date'));
                 sessions.push({
                     id: record.id,
                     date: record.get('Date'),
