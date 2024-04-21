@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
 const airtableAPI = require('./airtableAPI');
 const {read} = require("@1password/op-js");
 const yaml = require('js-yaml');
@@ -24,7 +27,6 @@ async function planSessions(show) {
     }
 }
 
-// Helper function to organize scenes by date
 function organizeScenesByDate(sessions, scenes, characters, actors) {
     let scenesByDate = {};
     for (let session of sessions) {
