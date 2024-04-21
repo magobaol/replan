@@ -47,7 +47,7 @@ async function loadSessions(includePast) {
             sort: [{field: 'Date', direction: 'asc'}],
         }).eachPage(function page(records, fetchNextPage) {
             records.forEach(function(record) {
-                console.log('Retrieved ', record.get('Date'));
+                //console.log('Retrieved ', record.get('Date'));
                 sessions.push({
                     id: record.id,
                     date: record.get('Date'),
