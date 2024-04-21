@@ -102,11 +102,11 @@ async function createPlans(scenesByDate, actors, characters, sessions) {
     }
 }
 
-function loadShows(fileName = `config.yaml`) {
+function loadShows(fileName = `shows.yaml`) {
     return yaml.load(fs.readFileSync(fileName), {});
 }
 
-function getShowsIds(fileName = `config.yaml`) {
+function getShowsIds(fileName = `shows.yaml`) {
     return loadShows(fileName).map(show => show.id)
 }
 
