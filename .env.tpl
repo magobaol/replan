@@ -1,1 +1,1 @@
-AIRTABLE_API_TOKEN=op://vault/item-name/field-name
+AIRTABLE_API_TOKEN_OP_PATH=op://vault/item-name/field-name

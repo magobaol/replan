@@ -16,7 +16,12 @@ function loadActors() {
         }).eachPage(function page(records, fetchNextPage) {
             records.forEach(function(record) {
                 // console.log('Retrieved ', record.get('Name'));
-                actors.push(record);
+                actors.push({
+                    id: record.id,
+                    characters: record.get('Characters'),
+                    availabilities: record.get('Availabilities'),
+                    name: record.get('Name')
+                });
             });
 
             fetchNextPage();
@@ -38,7 +43,11 @@ async function loadSessions() {
         }).eachPage(function page(records, fetchNextPage) {
             records.forEach(function(record) {
                 // console.log('Retrieved ', record.get('Date'));
-                sessions.push(record);
+                sessions.push({
+                    id: record.id,
+                    date: record.get('Date'),
+                    availableActors: record.get('Actors')
+                });
             });
 
             fetchNextPage();
@@ -60,7 +69,11 @@ async function loadScenes() {
         }).eachPage(function page(records, fetchNextPage) {
             records.forEach(function(record) {
                 // console.log('Retrieved ', record.get('Number'));
-                scenes.push(record);
+                scenes.push({
+                    id: record.id,
+                    number: record.get('Number'),
+                    characters: record.get('Characters')
+                });
             });
 
             fetchNextPage();
@@ -82,7 +95,12 @@ async function loadCharacters() {
         }).eachPage(function page(records, fetchNextPage) {
             records.forEach(function(record) {
                 // console.log('Retrieved ', record.get('Name'));
-                characters.push(record);
+                characters.push({
+                    id: record.id,
+                    name: record.get('Name'),
+                    actor: record.get('Actor'),
+                    scenes: record.get('Scenes')
+                });
             });
 
             fetchNextPage();

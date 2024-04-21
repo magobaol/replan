@@ -19,6 +19,7 @@ async function planSessions(show) {
         const sessions = await airtableAPI.loadSessions();
         const scenes = await airtableAPI.loadScenes();
         const characters = await airtableAPI.loadCharacters();
+        console.log(characters[0])
 
         const scenesByDate = organizeScenesByDate(sessions, scenes, characters, actors);
         await createPlans(scenesByDate, actors, characters, sessions);
@@ -31,7 +32,7 @@ function organizeScenesByDate(sessions, scenes, characters, actors) {
     let scenesByDate = {};
     for (let session of sessions) {
         let sessionId = session.id;
-        let sessionDate = session.get('Date');
+        let sessionDate = session.date;
 
         if (!scenesByDate[sessionDate]) {
             scenesByDate[sessionDate] = {
@@ -50,26 +51,26 @@ function organizeScenesByDate(sessions, scenes, characters, actors) {
 }
 
 function sceneCanBeRehearsed(scene, characters, actors, sessionId) {
-    return scene.get('Characters').every(characterId => {
+    return scene.characters.every(characterId => {
         const character = characters.find(c => c.id === characterId);
         if (!character) {
             console.log(`Character not found: ${characterId}`);
             return false;
         }
-        const actorId = character.get('Actor')[0];
+        const actorId = character.actor[0];
         const actor = actors.find(a => a.id === actorId);
         if (!actor) {
             console.log(`Actor not found for character: ${actorId}`);
             return false;
         }
         // Ensure actor is available and the Availabilities include the sessionId
-        return actor.get('Availabilities') && actor.get('Availabilities').includes(sessionId);
+        return actor.availabilities && actor.availabilities.includes(sessionId);
     });
 }
 
 async function createPlans(scenesByDate, actors, characters, sessions) {
     for (let session of sessions) {
-        let sessionDate = session.get('Date');
+        let sessionDate = session.date;
         let sessionId = session.id;
         let scenes = scenesByDate[sessionDate] ? scenesByDate[sessionDate].scenes : [];
 
@@ -77,16 +78,16 @@ async function createPlans(scenesByDate, actors, characters, sessions) {
 
         // Determine available actors for this session
         const availableActorIds = new Set(actors.filter(actor =>
-            actor.get('Availabilities') && actor.get('Availabilities').includes(sessionId))
+            actor.availabilities && actor.availabilities.includes(sessionId))
             .map(actor => actor.id));
 
         // Determine needed actor IDs from the scenes that can be rehearsed
         const neededActorIds = new Set();
         scenes.forEach(scene => {
-            scene.get('Characters').forEach(characterId => {
+            scene.characters.forEach(characterId => {
                 const character = characters.find(c => c.id === characterId);
                 if (character && sceneCanBeRehearsed(scene, characters, actors, sessionId)) {
-                    const actorId = character.get('Actor')[0];
+                    const actorId = character.actor[0];
                     neededActorIds.add(actorId);
                 }
             });
